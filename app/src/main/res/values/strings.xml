@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">MobileEnergy</string>
+
+    <string name="cancel">Отмена</string>
+
+    <string name="open_GPS">Не включен GPS. Открыть настройки GPS?</string>
+
+    <string name="settings">Настройки</string>
+    <string name="loading">Загрузка данных</string>
+
+    <string name="locations">Локации</string>
+    <string name="home">Главная</string>
+    <string name="list">Лист</string>
+    <string name="shop">Магазин</string>
+    <string name="maps">Карта</string>
+    <string name="more">Далее</string>
+</resources>

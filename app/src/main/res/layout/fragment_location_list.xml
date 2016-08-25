@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".fragment.LocationFragment"
+    android:name="kz.bapps.mobileenergy.fragment.Fragment"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimaryDark"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btn_locations"
+            android:padding="0dp"
+            android:layout_width="0dp"
+            android:layout_weight=".5"
+            android:text="@string/locations"
+            style="@style/ButtonSwitched"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:id="@+id/btn_maps"
+            android:padding="0dp"
+            android:layout_width="0dp"
+            android:layout_weight=".5"
+            android:text="@string/maps"
+            style="@style/ButtonSwitched"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layoutManager="LinearLayoutManager"
+        tools:listitem="@layout/fragment_location_item" />
+
+    <com.google.android.gms.maps.MapView
+        android:id="@+id/mapView"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</LinearLayout>
