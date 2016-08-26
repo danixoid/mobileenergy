@@ -14,4 +14,8 @@
     <string name="shop">Магазин</string>
     <string name="maps">Карта</string>
     <string name="more">Далее</string>
+    <string name="low_battery">Подключите устройство зарядки батареи</string>
+    <string name="high_battery">Устройство заряжено</string>
+    <string name="usb_charge">Идет зарядка от USB</string>
+    <string name="ac_charge">Идет зарядка</string>
 </resources>

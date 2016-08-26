@@ -26,7 +26,7 @@ public class SplashActivity extends AppCompatActivity {
         final Drawable drawable;
         drawable = ContextCompat.getDrawable(SplashActivity.this, R.drawable.progressbar_horizontal);
 
-        ProgressBar progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        ProgressBar progressBar = (ProgressBar) findViewById(R.id.progress_bar);
         progressBar.setProgressDrawable(drawable);
         ProgressBarAnimation anim = new ProgressBarAnimation(progressBar, 0, 100);
         anim.setDuration(1000);

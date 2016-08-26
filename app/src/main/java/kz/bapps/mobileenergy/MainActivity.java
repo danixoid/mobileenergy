@@ -2,23 +2,19 @@ package kz.bapps.mobileenergy;
 
 import android.Manifest;
 import android.content.BroadcastReceiver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.location.Criteria;
 import android.location.LocationManager;
-import android.net.Uri;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
-import android.text.Layout;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -54,6 +50,29 @@ public class MainActivity extends AppCompatActivity implements
         getSupportActionBar().hide();
         setContentView(R.layout.activity_main);
 
+
+        if (!MobileEnergy.isGpsEnabled(this)) {
+            MobileEnergy.displayPromptForEnablingGPS(this);
+        }
+
+        if (MobileEnergy.isNetworkAvailable(this)) {
+
+            ContentValues params = new ContentValues();
+
+            android.location.Location myLocation = getMyLocation();
+
+            if(myLocation != null) {
+                params.put("lat",Double.toString(myLocation.getLatitude()));
+                params.put("lng",Double.toString(myLocation.getLongitude()));
+            } else {
+                params.put("lat","43.228999");
+                params.put("lng","76.906483");
+            }
+
+            LoadLocationService.startActionGetAll(this,params);
+        } else {
+            //
+        }
         /**
          *
          */
@@ -133,7 +152,6 @@ public class MainActivity extends AppCompatActivity implements
         super.onPause();
     }
 
-    @Override
     public void nextFragment(Fragment fragment) {
 
         btnHome.setImageResource(R.drawable.ic_explore_gray_24dp);
@@ -158,7 +176,7 @@ public class MainActivity extends AppCompatActivity implements
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.layout_main,fragment)
-                .addToBackStack(TAG)
+//                .addToBackStack(TAG)
                 .commit();
     }
 
@@ -194,7 +212,7 @@ public class MainActivity extends AppCompatActivity implements
                             new TypeToken<List<Location>>() {
                             }.getType());
 
-            nextFragment(LocationFragment.newInstance());
+            //nextFragment(LocationFragment.newInstance());
         }
     };
 

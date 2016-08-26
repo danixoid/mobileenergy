@@ -7,7 +7,9 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 
 import kz.bapps.mobileenergy.JSONParser;
 import kz.bapps.mobileenergy.R;
@@ -42,6 +44,21 @@ public class WebFragment extends Fragment {
 
         if(view instanceof WebView) {
             webView = (WebView) view;
+            webView.getSettings().setJavaScriptEnabled(true);
+
+            WebViewClient webViewClient= new WebViewClient(){
+                @Override
+                public boolean shouldOverrideUrlLoading(WebView  view, WebResourceRequest request){
+                    return true;
+                }
+                @Override
+                public void onLoadResource(WebView  view, String  url){
+                    //
+                }
+            };
+
+            webView.setWebViewClient(webViewClient);
+
             webView.loadUrl(JSONParser.URL_ROOT);
         }
 
