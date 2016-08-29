@@ -11,11 +11,15 @@
     <string name="locations">Локации</string>
     <string name="home">Главная</string>
     <string name="list">Лист</string>
+    <string name="site">Сайт</string>
     <string name="shop">Магазин</string>
     <string name="maps">Карта</string>
     <string name="more">Далее</string>
+    <string name="distance">Дистанция</string>
+    <string name="spots">Зарядки</string>
     <string name="low_battery">Подключите устройство зарядки батареи</string>
     <string name="high_battery">Устройство заряжено</string>
     <string name="usb_charge">Идет зарядка от USB</string>
     <string name="ac_charge">Идет зарядка</string>
+    <string name="title_activity_detail">Map</string>
 </resources>

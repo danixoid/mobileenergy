@@ -61,6 +61,16 @@
             android:src="@drawable/ic_place_gray_24dp" />
 
         <ImageButton
+            android:id="@+id/btn_site"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight=".25"
+            android:clickable="true"
+            android:scaleType="fitCenter"
+            style="?android:attr/borderlessButtonStyle"
+            android:src="@drawable/ic_card_travel_gray_24dp" />
+
+        <ImageButton
             android:id="@+id/btn_shop"
             android:layout_width="0dp"
             android:layout_height="match_parent"

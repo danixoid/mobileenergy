@@ -1,11 +1,15 @@
 package kz.bapps.mobileenergy.model;
 
+import java.io.Serializable;
+
 /**
  * Created by danixoid on 8/24/16.
  */
-public class Location {
+@SuppressWarnings("serial")
+public class Location implements Serializable {
 
-    private int spot;
+    private int id;
+    private int spots;
     private Double distance;
     private Double lat;
     private Double lng;
@@ -65,12 +69,12 @@ public class Location {
         this.about = about;
     }
 
-    public int getSpot() {
-        return spot;
+    public int getSpots() {
+        return spots;
     }
 
-    public void setSpot(int spot) {
-        this.spot = spot;
+    public void setSpots(int spots) {
+        this.spots = spots;
     }
 
     public Double getLat() {
@@ -95,5 +99,13 @@ public class Location {
 
     public void setDistance(Double distance) {
         this.distance = distance;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity implements
     private ImageButton btnHome;
     private ImageButton btnLocs;
     private ImageButton btnShop;
+    private ImageButton btnSite;
     private ImageButton btnMore;
     private TextView title;
 
@@ -104,6 +105,7 @@ public class MainActivity extends AppCompatActivity implements
 
         btnHome = (ImageButton) findViewById(R.id.btn_home);
         btnLocs = (ImageButton) findViewById(R.id.btn_locs);
+        btnSite = (ImageButton) findViewById(R.id.btn_site);
         btnShop = (ImageButton) findViewById(R.id.btn_shop);
         btnMore = (ImageButton) findViewById(R.id.btn_more);
 
@@ -121,10 +123,17 @@ public class MainActivity extends AppCompatActivity implements
             }
         });
 
-        btnShop.setOnClickListener(new View.OnClickListener() {
+        btnSite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 nextFragment(WebFragment.newInstance());
+            }
+        });
+
+        btnShop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //nextFragment(WebFragment.newInstance());
             }
         });
 
@@ -156,6 +165,7 @@ public class MainActivity extends AppCompatActivity implements
 
         btnHome.setImageResource(R.drawable.ic_explore_gray_24dp);
         btnLocs.setImageResource(R.drawable.ic_place_gray_24dp);
+        btnSite.setImageResource(R.drawable.ic_public_gray_24dp);
         btnShop.setImageResource(R.drawable.ic_card_travel_gray_24dp);
         btnMore.setImageResource(R.drawable.ic_more_horiz_gray_24dp);
 
@@ -166,9 +176,12 @@ public class MainActivity extends AppCompatActivity implements
             title.setText(R.string.maps);
             btnLocs.setImageResource(R.drawable.ic_place_green_24dp);
         } else if(fragment instanceof WebFragment) {
+            title.setText(R.string.site);
+            btnSite.setImageResource(R.drawable.ic_public_green_24dp);
+        }/* else if(fragment instanceof WebFragment) {
             title.setText(R.string.shop);
             btnShop.setImageResource(R.drawable.ic_card_travel_green_24dp);
-        }/* else if(fragment instanceof LocationFragment) {
+        } else if(fragment instanceof LocationFragment) {
             title.setText(R.string.more);
             btnLocs.setImageResource(R.drawable.ic_place_green_24dp);
         }*/
@@ -176,15 +189,10 @@ public class MainActivity extends AppCompatActivity implements
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.layout_main,fragment)
-//                .addToBackStack(TAG)
+                .addToBackStack(TAG)
                 .commit();
     }
 
-
-    @Override
-    public void onListFragmentInteraction(Location item) {
-        nextFragment(LocationFragment.newInstance());
-    }
 
     @Override
     public android.location.Location getMyLocation() {
@@ -194,6 +202,14 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public List<Location> onGetLocations() {
         return locations;
+    }
+
+    @Override
+    public void openDetail(Location location) {
+
+        Intent intent = new Intent(this, DetailActivity.class);
+        intent.putExtra(DetailActivity.EXTRA_LOCATION,location);
+        startActivity(intent);
     }
 
 

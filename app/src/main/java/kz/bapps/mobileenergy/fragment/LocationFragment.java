@@ -16,7 +16,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -27,13 +26,17 @@ import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import kz.bapps.mobileenergy.MobileEnergy;
 import kz.bapps.mobileenergy.R;
+import kz.bapps.mobileenergy.adapter.LocationRecyclerViewAdapter;
 import kz.bapps.mobileenergy.draw.DividerItemDecoration;
 import kz.bapps.mobileenergy.model.Location;
 
@@ -43,7 +46,7 @@ import kz.bapps.mobileenergy.model.Location;
  * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
  * interface.
  */
-public class LocationFragment extends Fragment {
+public class LocationFragment extends Fragment implements GoogleMap.OnMarkerClickListener {
 
     private static final String TAG = "LocationFragment";
     final private float MAP_ZOOM = 14;
@@ -56,7 +59,7 @@ public class LocationFragment extends Fragment {
     private Button btnMap;
     private Button btnLocations;
     private LatLng mapLatLng;
-    private android.location.Location myLocation;
+    private Map<Marker, Location> haspMap = new HashMap<>();
 
     private boolean showMap = false;
 
@@ -135,17 +138,20 @@ public class LocationFragment extends Fragment {
 
                 for(Location location : locations) {
 
-                    MarkerOptions marker = new MarkerOptions()
+                    MarkerOptions markerOptions = new MarkerOptions()
                             .position(new LatLng(location.getLat(),location.getLng()))
                             .title(location.getName())
                             .icon(icon)
                             .snippet(location.getAbout());
 
-                    googleMap.addMarker(marker);
+                    Marker marker = googleMap.addMarker(markerOptions);
+
+                    haspMap.put(marker, location);
                 }
 
                 // For zooming automatically to the location of the marker
                 setMyLocation();
+                googleMap.setOnMarkerClickListener(LocationFragment.this);
             }
         });
 
@@ -165,6 +171,7 @@ public class LocationFragment extends Fragment {
         // resize map
         View toolbar = getActivity().findViewById(R.id.toolbar);
         mMapView.setPadding(0,0,0,toolbar.getHeight());
+        recyclerView.setPadding(0,0,0,toolbar.getHeight());
 
         return view;
     }
@@ -206,7 +213,7 @@ public class LocationFragment extends Fragment {
             mListener = (OnListFragmentInteractionListener) context;
             locations = mListener.onGetLocations();
 
-            myLocation = mListener.getMyLocation();
+            android.location.Location myLocation = mListener.getMyLocation();
             if (mapLatLng == null && myLocation != null) {
                 mapLatLng = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
             }
@@ -226,9 +233,21 @@ public class LocationFragment extends Fragment {
         mListener = null;
     }
 
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+
+        Location location = haspMap.get(marker);
+
+        if(mListener != null && location != null) {
+            mListener.openDetail(location);
+        }
+
+        return false;
+    }
+
 
     public interface OnListFragmentInteractionListener {
-        void onListFragmentInteraction(Location item);
+        void openDetail(Location location);
         List<Location> onGetLocations();
         android.location.Location getMyLocation();
     }

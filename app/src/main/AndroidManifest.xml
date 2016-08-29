@@ -47,6 +47,15 @@
         <activity android:name=".MainActivity">
         </activity>
 
+        <activity android:name=".DetailActivity">
+        </activity>
+
+        <receiver
+            android:name=".service.BatteryListener" >
+            <intent-filter>
+                <action android:name="android.intent.action.BATTERY_CHANGED" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>
