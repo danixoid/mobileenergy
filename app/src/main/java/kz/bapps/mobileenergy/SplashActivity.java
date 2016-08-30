@@ -7,14 +7,20 @@ import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.animation.Transformation;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
  * status bar and navigation/system bar) with user interaction.
  */
-public class SplashActivity extends AppCompatActivity {
+public class SplashActivity extends AppCompatActivity implements Animation.AnimationListener {
+
+    // Animation
+    Animation animBlink;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,14 +29,14 @@ public class SplashActivity extends AppCompatActivity {
         getSupportActionBar().hide();
         setContentView(R.layout.activity_splash);
 
-        final Drawable drawable;
-        drawable = ContextCompat.getDrawable(SplashActivity.this, R.drawable.progressbar_horizontal);
 
-        ProgressBar progressBar = (ProgressBar) findViewById(R.id.progress_bar);
-        progressBar.setProgressDrawable(drawable);
-        ProgressBarAnimation anim = new ProgressBarAnimation(progressBar, 0, 100);
-        anim.setDuration(1000);
-        progressBar.startAnimation(anim);
+        ImageView imgView = (ImageView) findViewById(R.id.imgGrad1);
+        // load the animation
+        animBlink = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.blink);
+
+        // set animation listener
+        animBlink.setAnimationListener(this);
+        imgView.setAnimation(animBlink);
 
         new Handler().postDelayed(new Runnable(){
             @Override
@@ -41,28 +47,22 @@ public class SplashActivity extends AppCompatActivity {
                 SplashActivity.this.finish();
             }
 
-        }, 1000);
+        }, 3000);
 
     }
 
-    public class ProgressBarAnimation extends Animation {
-        private ProgressBar progressBar;
-        private float from;
-        private float  to;
+    @Override
+    public void onAnimationStart(Animation animation) {
 
-        public ProgressBarAnimation(ProgressBar progressBar, float from, float to) {
-            super();
-            this.progressBar = progressBar;
-            this.from = from;
-            this.to = to;
-        }
+    }
 
-        @Override
-        protected void applyTransformation(float interpolatedTime, Transformation t) {
-            super.applyTransformation(interpolatedTime, t);
-            float value = from + (to - from) * interpolatedTime;
-            progressBar.setProgress((int) value);
-        }
+    @Override
+    public void onAnimationEnd(Animation animation) {
+
+    }
+
+    @Override
+    public void onAnimationRepeat(Animation animation) {
 
     }
 

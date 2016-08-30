@@ -163,27 +163,27 @@ public class MainActivity extends AppCompatActivity implements
 
     public void nextFragment(Fragment fragment) {
 
-        btnHome.setImageResource(R.drawable.ic_explore_gray_24dp);
-        btnLocs.setImageResource(R.drawable.ic_place_gray_24dp);
+        btnHome.setImageResource(R.drawable.ic_flash_gray);
+        btnLocs.setImageResource(R.drawable.ic_marker_gray);
         btnSite.setImageResource(R.drawable.ic_public_gray_24dp);
-        btnShop.setImageResource(R.drawable.ic_card_travel_gray_24dp);
-        btnMore.setImageResource(R.drawable.ic_more_horiz_gray_24dp);
+        btnShop.setImageResource(R.drawable.ic_shop_gray);
+        btnMore.setImageResource(R.drawable.ic_more_gray);
 
         if(fragment instanceof HomeFragment) {
             title.setText(R.string.home);
-            btnHome.setImageResource(R.drawable.ic_explore_green_24dp);
+            btnHome.setImageResource(R.drawable.ic_flash_green);
         } else if(fragment instanceof LocationFragment) {
             title.setText(R.string.maps);
-            btnLocs.setImageResource(R.drawable.ic_place_green_24dp);
+            btnLocs.setImageResource(R.drawable.ic_marker_green);
         } else if(fragment instanceof WebFragment) {
             title.setText(R.string.site);
             btnSite.setImageResource(R.drawable.ic_public_green_24dp);
         }/* else if(fragment instanceof WebFragment) {
             title.setText(R.string.shop);
-            btnShop.setImageResource(R.drawable.ic_card_travel_green_24dp);
+            btnShop.setImageResource(R.drawable.ic_shop_green);
         } else if(fragment instanceof LocationFragment) {
             title.setText(R.string.more);
-            btnLocs.setImageResource(R.drawable.ic_place_green_24dp);
+            btnLocs.setImageResource(R.drawable.ic_more_green);
         }*/
 
         getSupportFragmentManager()

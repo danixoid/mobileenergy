@@ -48,7 +48,7 @@
             android:clickable="true"
             android:scaleType="fitCenter"
             style="?android:attr/borderlessButtonStyle"
-            android:src="@drawable/ic_explore_gray_24dp" />
+            android:src="@drawable/ic_flash_gray" />
 
         <ImageButton
             android:id="@+id/btn_locs"
@@ -58,7 +58,7 @@
             android:clickable="true"
             android:scaleType="fitCenter"
             style="?android:attr/borderlessButtonStyle"
-            android:src="@drawable/ic_place_gray_24dp" />
+            android:src="@drawable/ic_marker_gray" />
 
         <ImageButton
             android:id="@+id/btn_site"
@@ -68,7 +68,7 @@
             android:clickable="true"
             android:scaleType="fitCenter"
             style="?android:attr/borderlessButtonStyle"
-            android:src="@drawable/ic_card_travel_gray_24dp" />
+            android:src="@drawable/ic_public_gray_24dp" />
 
         <ImageButton
             android:id="@+id/btn_shop"
@@ -78,7 +78,7 @@
             android:clickable="true"
             android:scaleType="fitCenter"
             style="?android:attr/borderlessButtonStyle"
-            android:src="@drawable/ic_card_travel_gray_24dp" />
+            android:src="@drawable/ic_shop_gray" />
 
         <ImageButton
             android:id="@+id/btn_more"
@@ -88,7 +88,7 @@
             android:clickable="true"
             android:scaleType="fitCenter"
             style="?android:attr/borderlessButtonStyle"
-            android:src="@drawable/ic_more_horiz_gray_24dp" />
+            android:src="@drawable/ic_more_gray" />
 
     </LinearLayout>
 
