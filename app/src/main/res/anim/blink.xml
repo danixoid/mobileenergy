@@ -7,9 +7,9 @@
     <translate
         android:duration="1600"
         android:fillAfter="true"
-        android:fromXDelta="-90%p"
+        android:fromXDelta="-75%p"
         android:startOffset="300"
-        android:toXDelta="90%p"
+        android:toXDelta="75%p"
         android:repeatMode="reverse"
         android:repeatCount="infinite" />
 
