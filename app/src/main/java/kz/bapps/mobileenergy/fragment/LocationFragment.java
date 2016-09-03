@@ -1,11 +1,18 @@
 package kz.bapps.mobileenergy.fragment;
 
 import android.Manifest;
+import android.content.BroadcastReceiver;
+import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.location.Criteria;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -28,6 +35,7 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -39,6 +47,7 @@ import kz.bapps.mobileenergy.R;
 import kz.bapps.mobileenergy.adapter.LocationRecyclerViewAdapter;
 import kz.bapps.mobileenergy.draw.DividerItemDecoration;
 import kz.bapps.mobileenergy.model.Location;
+import kz.bapps.mobileenergy.service.LoadLocationService;
 
 /**
  * A fragment representing a list of Items.
@@ -46,7 +55,8 @@ import kz.bapps.mobileenergy.model.Location;
  * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
  * interface.
  */
-public class LocationFragment extends Fragment implements GoogleMap.OnMarkerClickListener {
+public class LocationFragment extends Fragment implements
+        LocationListener, GoogleMap.OnMarkerClickListener {
 
     private static final String TAG = "LocationFragment";
     final private float MAP_ZOOM = 14;
@@ -60,6 +70,7 @@ public class LocationFragment extends Fragment implements GoogleMap.OnMarkerClic
     private Button btnLocations;
     private LatLng mapLatLng;
     private Map<Marker, Location> haspMap = new HashMap<>();
+    private android.location.Location myLocation;
 
     private boolean showMap = false;
 
@@ -86,6 +97,30 @@ public class LocationFragment extends Fragment implements GoogleMap.OnMarkerClic
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_location_list, container, false);
+
+
+
+        if (ActivityCompat.checkSelfPermission(getActivity(),
+                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                || ActivityCompat.checkSelfPermission(getActivity(),
+                Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+
+            LocationManager locationManager = (LocationManager) getActivity()
+                    .getSystemService(Context.LOCATION_SERVICE);
+            Criteria criteria = new Criteria();
+            String provider = locationManager.getBestProvider(criteria, false);
+
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5, 1f, this);
+            myLocation = locationManager.getLastKnownLocation(provider);
+
+            if (myLocation == null) {
+                myLocation = new android.location.Location(provider);
+                myLocation.setLatitude(43.228999);
+                myLocation.setLongitude(76.906483);
+            }
+        }
+
+
 
         btnMap = (Button) view.findViewById(R.id.btn_maps);
         btnMap.setOnClickListener(new View.OnClickListener() {
@@ -131,26 +166,16 @@ public class LocationFragment extends Fragment implements GoogleMap.OnMarkerClic
                 googleMap.setMyLocationEnabled(true);
                 googleMap.getUiSettings().setZoomControlsEnabled(true);
 
-                Bitmap imageBitmap = BitmapFactory.decodeResource(getResources(),R.drawable.logo);
-                Bitmap resizedBitmap = Bitmap.createScaledBitmap(imageBitmap, 64, 64, false);
-                BitmapDescriptor icon = BitmapDescriptorFactory
-                        .fromBitmap(resizedBitmap);
-
-                for(Location location : locations) {
-
-                    MarkerOptions markerOptions = new MarkerOptions()
-                            .position(new LatLng(location.getLat(),location.getLng()))
-                            .title(location.getName())
-                            .icon(icon)
-                            .snippet(location.getAbout());
-
-                    Marker marker = googleMap.addMarker(markerOptions);
-
-                    haspMap.put(marker, location);
-                }
-
                 // For zooming automatically to the location of the marker
                 setMyLocation();
+                googleMap.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {
+                    @Override
+                    public boolean onMyLocationButtonClick() {
+                        setMyLocation();
+                        return true;
+                    }
+                });
+
                 googleMap.setOnMarkerClickListener(LocationFragment.this);
             }
         });
@@ -161,7 +186,6 @@ public class LocationFragment extends Fragment implements GoogleMap.OnMarkerClic
 
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
 
-        recyclerView.setAdapter(new LocationRecyclerViewAdapter(locations, mListener));
         recyclerView.addItemDecoration(
                 new DividerItemDecoration(getActivity(), R.drawable.list_item));
 
@@ -181,13 +205,17 @@ public class LocationFragment extends Fragment implements GoogleMap.OnMarkerClic
     public void onResume() {
         super.onResume();
         mMapView.onResume();
+        getActivity().registerReceiver(brGetLocations,
+                new IntentFilter(LoadLocationService.BROADCAST_RECEIVER));
     }
 
     @Override
     public void onPause() {
-        super.onPause();
         mMapView.onPause();
+        getActivity().unregisterReceiver(brGetLocations);
+        super.onPause();
     }
+
 
     @Override
     public void onDestroy() {
@@ -211,9 +239,7 @@ public class LocationFragment extends Fragment implements GoogleMap.OnMarkerClic
 
         if (context instanceof OnListFragmentInteractionListener) {
             mListener = (OnListFragmentInteractionListener) context;
-            locations = mListener.onGetLocations();
 
-            android.location.Location myLocation = mListener.getMyLocation();
             if (mapLatLng == null && myLocation != null) {
                 mapLatLng = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
             }
@@ -221,6 +247,7 @@ public class LocationFragment extends Fragment implements GoogleMap.OnMarkerClic
             for (Location location : locations) {
                 Log.d(TAG,location.getName() + " message");
             }
+
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnListFragmentInteractionListener");
@@ -248,8 +275,6 @@ public class LocationFragment extends Fragment implements GoogleMap.OnMarkerClic
 
     public interface OnListFragmentInteractionListener {
         void openDetail(Location location);
-        List<Location> onGetLocations();
-        android.location.Location getMyLocation();
     }
 
 
@@ -271,11 +296,96 @@ public class LocationFragment extends Fragment implements GoogleMap.OnMarkerClic
     }
 
 
+    /**
+     *      BROADCASTRECEIVER GET LOCATIONS
+     */
+    BroadcastReceiver brGetLocations = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+            String json = intent.getStringExtra(LoadLocationService.EXTRA_DATA);
+
+            locations = MobileEnergy.getInstance(getActivity()).getGson()
+                    .fromJson(json,
+                            new TypeToken<List<Location>>() {
+                            }.getType());
+
+            recyclerView.setAdapter(new LocationRecyclerViewAdapter(locations, mListener));
+
+            Bitmap imageBitmap = BitmapFactory.decodeResource(getResources(),R.drawable.logo);
+            Bitmap resizedBitmap = Bitmap.createScaledBitmap(imageBitmap, 64, 64, false);
+            BitmapDescriptor icon = BitmapDescriptorFactory
+                    .fromBitmap(resizedBitmap);
+
+            for(Location location : locations) {
+
+                MarkerOptions markerOptions = new MarkerOptions()
+                        .position(new LatLng(location.getLat(),location.getLng()))
+                        .title(location.getName())
+                        .icon(icon)
+                        .snippet(location.getAbout());
+
+                Marker marker = googleMap.addMarker(markerOptions);
+
+                haspMap.put(marker, location);
+            }
+
+        }
+    };
+
+
     /**  УСТАНОВИТЬ МОЕ МЕСТОПОЛОЖЕНИЕ
      * =================================================================== */
     private void setMyLocation() {
+
+        if (myLocation != null) {
+            mapLatLng = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
+        }
+
         CameraPosition cameraPosition = new CameraPosition.Builder().target(mapLatLng).zoom(MAP_ZOOM).build();
         googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
     }
 
+
+
+    private void startGetLocations() {
+        if (MobileEnergy.isNetworkAvailable(getActivity())) {
+
+            ContentValues params = new ContentValues();
+
+            if(myLocation != null) {
+                params.put("lat",Double.toString(myLocation.getLatitude()));
+                params.put("lng",Double.toString(myLocation.getLongitude()));
+            } else {
+                params.put("lat","43.228999");
+                params.put("lng","76.906483");
+            }
+
+            LoadLocationService.startActionGetAll(getActivity(),params);
+        }
+    }
+
+    @Override
+    public void onLocationChanged(android.location.Location location) {
+        myLocation = location;
+        startGetLocations();
+        if(showMap) {
+            setMyLocation();
+        }
+    }
+
+    @Override
+    public void onStatusChanged(String s, int i, Bundle bundle) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String s) {
+        startGetLocations();
+    }
+
+    @Override
+    public void onProviderDisabled(String s) {
+        MobileEnergy.displayPromptForEnablingGPS(getActivity());
+    }
 }

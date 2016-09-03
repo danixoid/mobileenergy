@@ -56,12 +56,14 @@ public class LocationRecyclerViewAdapter extends RecyclerView.Adapter<LocationRe
 
 
         @SuppressLint("DefaultLocale")
-        String distance = String.format("%.3f", mValues.get(position).getDistance());
+        String distance = holder.mItem.getDistance() >= 1
+                ? String.format("%.2f", holder.mItem.getDistance()) + "км"
+                : String.format("%.0f", holder.mItem.getDistance() * 1000) + "м";
 
         holder.mDistanceView.setText(context.getString(R.string.distance) + ": "
                 + distance);
         holder.mSpotsView.setText(context.getString(R.string.spots) + ": "
-                + Integer.toString(mValues.get(position).getSpots()));
+                + Integer.toString(holder.mItem.getSpots()));
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override

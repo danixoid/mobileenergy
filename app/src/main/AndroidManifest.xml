@@ -37,6 +37,9 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/app_name"
             android:theme="@style/FullscreenTheme">
+        </activity>
+
+        <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -44,16 +47,15 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".MainActivity">
-        </activity>
-
         <activity android:name=".DetailActivity">
         </activity>
 
         <receiver
-            android:name=".service.BatteryListener" >
+            android:name=".service.BatteryListener"
+            android:enabled="true" >
             <intent-filter>
-                <action android:name="android.intent.action.BATTERY_CHANGED" />
+                <action android:name="android.intent.action.BATTERY_LOW" />
+                <action android:name="android.intent.action.POWER_DISCONNECTED" />
             </intent-filter>
         </receiver>
     </application>

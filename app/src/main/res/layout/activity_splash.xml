@@ -4,24 +4,62 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="#009846"
-    android:paddingBottom="128dp"
+    android:paddingBottom="96dp"
     android:paddingLeft="96dp"
     android:paddingRight="96dp"
-    android:paddingTop="64dp"
+    android:paddingTop="16dp"
     tools:context="kz.bapps.mobileenergy.SplashActivity">
 
 
     <ImageView
         android:layout_width="match_parent"
-        android:layout_weight="3.6"
+        android:layout_weight="1.5"
         android:layout_height="0dp"
         android:id="@+id/imageView"
-        android:scaleType="fitStart"
+        android:scaleType="fitCenter"
         android:src="@drawable/logo" />
 
 
+    <RelativeLayout android:layout_weight="2"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp">
+
+
+        <ProgressBar
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:id="@+id/progress_battery"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true" />
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="@string/loading"
+            android:id="@+id/alert"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearance"
+            android:id="@+id/info"
+            android:gravity="center"
+            android:textColor="@color/common_plus_signin_btn_text_dark_default"
+            android:layout_below="@+id/progress_battery"
+            android:layout_centerHorizontal="true" />
+
+    </RelativeLayout>
+
     <RelativeLayout
         android:layout_width="match_parent"
+        android:visibility="gone"
         android:layout_height="0dp"
         android:layout_marginLeft="32dp"
         android:layout_marginRight="32dp"

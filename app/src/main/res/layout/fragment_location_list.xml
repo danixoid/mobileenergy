@@ -19,7 +19,7 @@
             android:padding="0dp"
             android:layout_width="0dp"
             android:layout_weight=".5"
-            android:text="@string/locations"
+            android:text="@string/list"
             style="@style/ButtonSwitched"
             android:layout_height="wrap_content" />
 

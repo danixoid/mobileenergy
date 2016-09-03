@@ -9,27 +9,34 @@ import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.BatteryManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.animation.Transformation;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.text.DecimalFormat;
 
+import kz.bapps.mobileenergy.MainActivity;
 import kz.bapps.mobileenergy.R;
 
 public class HomeFragment extends Fragment {
 
-    private OnFragmentInteractionListener mListener;
 
     private TextView tvAlert;
     private TextView tvInfo;
     private View mView;
+    private ImageView imgView;
+    private ImageView imgLogo;
+    Animation animBlink;
+    Animation animZoom;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -52,10 +59,20 @@ public class HomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        mView = inflater.inflate(R.layout.fragment_home, container, false);
+        mView = inflater.inflate(R.layout.activity_splash, container, false);
 
         tvAlert = (TextView) mView.findViewById(R.id.alert);
         tvInfo = (TextView) mView.findViewById(R.id.info);
+
+
+        imgView = (ImageView) mView.findViewById(R.id.imgGrad1);
+        imgLogo = (ImageView) mView.findViewById(R.id.imageView);
+
+        // load the animation
+        animBlink = AnimationUtils.loadAnimation(mView.getContext().getApplicationContext(), R.anim.blink);
+        animZoom = AnimationUtils.loadAnimation(mView.getContext().getApplicationContext(), R.anim.zoom_out);
+
+        imgView.setAnimation(animBlink);
 
         return mView;
     }
@@ -82,24 +99,6 @@ public class HomeFragment extends Fragment {
     }
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
-    @Override
     public void onResume() {
         super.onResume();
         getActivity().registerReceiver(mBatInfoReceiver,
@@ -110,11 +109,6 @@ public class HomeFragment extends Fragment {
     public void onPause() {
         getActivity().unregisterReceiver(mBatInfoReceiver);
         super.onPause();
-    }
-
-    public interface OnFragmentInteractionListener {
-//        void nextFragment(Fragment fragment);
-        Location getMyLocation();
     }
 
     private BroadcastReceiver mBatInfoReceiver = new BroadcastReceiver(){
@@ -132,6 +126,9 @@ public class HomeFragment extends Fragment {
             float batteryState = ((float) level / (float) scale) * 100.0f;
 
             if(isCharging) {
+
+                imgLogo.setAnimation(animZoom);
+
                 if (batteryState >= 100) {
                     tvInfo.setText(R.string.high_battery);
                 } else if (usbCharge) {
@@ -140,6 +137,7 @@ public class HomeFragment extends Fragment {
                     tvInfo.setText(R.string.ac_charge);
                 }
             } else {
+                imgLogo.clearAnimation();
                 tvInfo.setText("");
             }
 

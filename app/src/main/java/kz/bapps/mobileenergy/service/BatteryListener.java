@@ -1,6 +1,5 @@
 package kz.bapps.mobileenergy.service;
 
-import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -10,6 +9,7 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.BatteryManager;
 import android.support.v4.app.NotificationCompat;
+import android.util.Log;
 
 import kz.bapps.mobileenergy.MainActivity;
 import kz.bapps.mobileenergy.MobileEnergy;
@@ -23,12 +23,15 @@ public class BatteryListener extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
 
+        Log.d("BatteryListener", "Yes");
+
         int status = intent.getIntExtra(BatteryManager.EXTRA_STATUS, -1);
         boolean isCharging = status == BatteryManager.BATTERY_STATUS_CHARGING;
 
         int level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
         int scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
         float batteryState = ((float) level / (float) scale) * 100.0f;
+
 
         Intent intent1 = new Intent(context, MainActivity.class);
         intent1.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

@@ -1,43 +1,27 @@
 package kz.bapps.mobileenergy;
 
-import android.Manifest;
-import android.content.BroadcastReceiver;
-import android.content.ContentValues;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.pm.PackageManager;
-import android.location.Criteria;
-import android.location.LocationManager;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.google.gson.reflect.TypeToken;
-
-import java.util.ArrayList;
 import java.util.List;
 
 import kz.bapps.mobileenergy.fragment.HomeFragment;
 import kz.bapps.mobileenergy.fragment.LocationFragment;
 import kz.bapps.mobileenergy.fragment.WebFragment;
 import kz.bapps.mobileenergy.model.Location;
-import kz.bapps.mobileenergy.service.LoadLocationService;
 
 public class MainActivity extends AppCompatActivity implements
-        HomeFragment.OnFragmentInteractionListener,
         LocationFragment.OnListFragmentInteractionListener,
         WebFragment.OnFragmentInteractionListener {
 
     final static private String TAG = "MainActivity";
 
-    public android.location.Location myLocation;
-    private List<Location> locations = new ArrayList<>();
     private ImageButton btnHome;
     private ImageButton btnLocs;
     private ImageButton btnShop;
@@ -56,51 +40,9 @@ public class MainActivity extends AppCompatActivity implements
             MobileEnergy.displayPromptForEnablingGPS(this);
         }
 
-        if (MobileEnergy.isNetworkAvailable(this)) {
-
-            ContentValues params = new ContentValues();
-
-            android.location.Location myLocation = getMyLocation();
-
-            if(myLocation != null) {
-                params.put("lat",Double.toString(myLocation.getLatitude()));
-                params.put("lng",Double.toString(myLocation.getLongitude()));
-            } else {
-                params.put("lat","43.228999");
-                params.put("lng","76.906483");
-            }
-
-            LoadLocationService.startActionGetAll(this,params);
-        } else {
-            //
-        }
         /**
          *
          */
-        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        Criteria criteria = new Criteria();
-        String provider = locationManager.getBestProvider(criteria, false);
-
-        if (ActivityCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-
-            return;
-        }
-
-        /**
-         *      МЕСТОПОЛОЖЕНИЕ
-         */
-
-        myLocation = locationManager.getLastKnownLocation(provider);
-
-        if (myLocation == null) {
-            myLocation = new android.location.Location(provider);
-            myLocation.setLatitude(50.41664123535156);
-            myLocation.setLongitude(80.26166534423828);
-        }
-
         title = (TextView) findViewById(R.id.text_view_title);
 
         btnHome = (ImageButton) findViewById(R.id.btn_home);
@@ -147,20 +89,6 @@ public class MainActivity extends AppCompatActivity implements
         nextFragment(HomeFragment.newInstance());
     }
 
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        registerReceiver(brGetLocations,
-                new IntentFilter(LoadLocationService.BROADCAST_RECEIVER));
-    }
-
-    @Override
-    public void onPause() {
-        unregisterReceiver(brGetLocations);
-        super.onPause();
-    }
-
     public void nextFragment(Fragment fragment) {
 
         btnHome.setImageResource(R.drawable.ic_flash_gray);
@@ -170,10 +98,10 @@ public class MainActivity extends AppCompatActivity implements
         btnMore.setImageResource(R.drawable.ic_more_gray);
 
         if(fragment instanceof HomeFragment) {
-            title.setText(R.string.home);
+            title.setText(R.string.app_name);
             btnHome.setImageResource(R.drawable.ic_flash_green);
         } else if(fragment instanceof LocationFragment) {
-            title.setText(R.string.maps);
+            title.setText(R.string.locations);
             btnLocs.setImageResource(R.drawable.ic_marker_green);
         } else if(fragment instanceof WebFragment) {
             title.setText(R.string.site);
@@ -189,19 +117,8 @@ public class MainActivity extends AppCompatActivity implements
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.layout_main,fragment)
-                .addToBackStack(TAG)
+//                .addToBackStack(TAG)
                 .commit();
-    }
-
-
-    @Override
-    public android.location.Location getMyLocation() {
-        return myLocation;
-    }
-
-    @Override
-    public List<Location> onGetLocations() {
-        return locations;
     }
 
     @Override
@@ -212,24 +129,27 @@ public class MainActivity extends AppCompatActivity implements
         startActivity(intent);
     }
 
+    @Override
+    public void onBackPressed() {
+        Fragment myFragment = getVisibleFragment();
 
-    /**
-     *      BROADCASTRECEIVER GET LOCATIONS
-     */
-    BroadcastReceiver brGetLocations = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-
-            String json = intent.getStringExtra(LoadLocationService.EXTRA_DATA);
-
-            Log.d(TAG,json);
-            locations = MobileEnergy.getInstance(MainActivity.this).getGson()
-                    .fromJson(json,
-                            new TypeToken<List<Location>>() {
-                            }.getType());
-
-            //nextFragment(LocationFragment.newInstance());
+        if(myFragment != null && myFragment instanceof HomeFragment) {
+            super.onBackPressed();
+        } else {
+            nextFragment(HomeFragment.newInstance());
         }
-    };
+    }
+
+    public Fragment getVisibleFragment(){
+        FragmentManager fragmentManager = MainActivity.this.getSupportFragmentManager();
+        List<Fragment> fragments = fragmentManager.getFragments();
+        if(fragments != null){
+            for(Fragment fragment : fragments){
+                if(fragment != null && fragment.isVisible())
+                    return fragment;
+            }
+        }
+        return null;
+    }
 
 }
