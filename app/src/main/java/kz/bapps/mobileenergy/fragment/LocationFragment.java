@@ -196,7 +196,7 @@ public class LocationFragment extends Fragment implements
         View toolbar = getActivity().findViewById(R.id.toolbar);
         mMapView.setPadding(0,0,0,toolbar.getHeight());
         recyclerView.setPadding(0,0,0,toolbar.getHeight());
-
+        startGetLocations();
         return view;
     }
 
