@@ -59,10 +59,14 @@ public class DetailActivity extends FragmentActivity implements
             @SuppressLint("DefaultLocale")
             String distance = String.format("%.3f", location.getDistance());
 
-            tvDistance.setText(getString(R.string.distance) + ": "
-                    + distance);
-            tvSpots.setText(getString(R.string.spots) + ": "
-                    + Integer.toString(location.getSpots()));
+
+            @SuppressLint("DefaultLocale")
+            String dist = location.getDistance() >= 1
+                    ? String.format("%.2f", location.getDistance()) + "км"
+                    : String.format("%.0f", location.getDistance() * 1000) + "м";
+
+            tvDistance.setText(getString(R.string.distance) + ": " + dist);
+            tvSpots.setText(getString(R.string.spots) + ": " + Integer.toString(location.getSpots()));
 
             Picasso.with(this)
                     .load(JSONParser.URL_ROOT + "location/"

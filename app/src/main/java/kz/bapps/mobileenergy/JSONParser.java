@@ -41,8 +41,9 @@ public class JSONParser {
 
     final static public String USER_AGENT = "MobileEnergy/1.0";
 //    final static public String HOST = "192.168.100.5";
-//    final static public String HOST = "mobileenergy.kz";
-    final static public String HOST = "powermat.bapps.kz";
+    final static public String HOST = "mobile-energy.kz";
+//    final static public String HOST = "powermat.bapps.kz";
+//    final static public String HOST = "tvbox.bapps.kz";
     final static public String PORT = "80";
     final static public String URL_ROOT = "http://" + HOST + ":" + PORT + "/";
 
