@@ -349,6 +349,7 @@ public class LocationFragment extends Fragment implements
 
 
     private void startGetLocations() {
+        if (getActivity() == null) return;
         if (MobileEnergy.isNetworkAvailable(getActivity())) {
 
             ContentValues params = new ContentValues();
