@@ -9,6 +9,8 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.MapsInitializer;
+
 import java.util.List;
 
 import kz.bapps.mobileenergy.fragment.HomeFragment;
@@ -35,6 +37,7 @@ public class MainActivity extends AppCompatActivity implements
         getSupportActionBar().hide();
         setContentView(R.layout.activity_main);
 
+        MapsInitializer.initialize(getApplicationContext());
 
         if (!MobileEnergy.isGpsEnabled(this)) {
             MobileEnergy.displayPromptForEnablingGPS(this);

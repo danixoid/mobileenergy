@@ -91,6 +91,7 @@ public class LocationFragment extends Fragment implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
     }
 
     @Override
@@ -312,22 +313,24 @@ public class LocationFragment extends Fragment implements
 
             recyclerView.setAdapter(new LocationRecyclerViewAdapter(locations, mListener));
 
-            Bitmap imageBitmap = BitmapFactory.decodeResource(getResources(),R.drawable.logo);
-            Bitmap resizedBitmap = Bitmap.createScaledBitmap(imageBitmap, 64, 64, false);
-            BitmapDescriptor icon = BitmapDescriptorFactory
-                    .fromBitmap(resizedBitmap);
+            if (showMap) {
+                Bitmap imageBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.logo);
+                Bitmap resizedBitmap = Bitmap.createScaledBitmap(imageBitmap, 64, 64, false);
+                BitmapDescriptor icon = BitmapDescriptorFactory
+                        .fromBitmap(resizedBitmap);
 
-            for(Location location : locations) {
+                for (Location location : locations) {
 
-                MarkerOptions markerOptions = new MarkerOptions()
-                        .position(new LatLng(location.getLat(),location.getLng()))
-                        .title(location.getName())
-                        .icon(icon)
-                        .snippet(location.getAbout());
+                    MarkerOptions markerOptions = new MarkerOptions()
+                            .position(new LatLng(location.getLat(), location.getLng()))
+                            .title(location.getName())
+                            .icon(icon)
+                            .snippet(location.getAbout());
 
-                Marker marker = googleMap.addMarker(markerOptions);
+                    Marker marker = googleMap.addMarker(markerOptions);
 
-                haspMap.put(marker, location);
+                    haspMap.put(marker, location);
+                }
             }
 
         }
