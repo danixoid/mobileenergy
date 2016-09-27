@@ -313,11 +313,11 @@ public class LocationFragment extends Fragment implements
 
             recyclerView.setAdapter(new LocationRecyclerViewAdapter(locations, mListener));
 
-            if (showMap) {
+            if(googleMap != null) {
                 Bitmap imageBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.logo);
                 Bitmap resizedBitmap = Bitmap.createScaledBitmap(imageBitmap, 102, 102, false);
-                BitmapDescriptor icon = BitmapDescriptorFactory
-                        .fromBitmap(resizedBitmap);
+                BitmapDescriptor icon = BitmapDescriptorFactory.fromBitmap(resizedBitmap);
+
 
                 for (Location location : locations) {
 
@@ -328,10 +328,10 @@ public class LocationFragment extends Fragment implements
                             .snippet(location.getAbout());
 
                     Marker marker = googleMap.addMarker(markerOptions);
-
                     haspMap.put(marker, location);
                 }
             }
+
 
         }
     };
