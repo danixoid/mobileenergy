@@ -12,19 +12,25 @@ android {
     }
 
     compileSdkVersion 24
-    buildToolsVersion "24.0.0"
+    buildToolsVersion "24"
 
     defaultConfig {
         applicationId "kz.bapps.mobileenergy"
         minSdkVersion 14
         targetSdkVersion 24
-        versionCode 3
+        maxSdkVersion 24
+        versionCode 7
         versionName "1.0"
+        signingConfig signingConfigs.config
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.config
+        }
+        debug {
+            signingConfig signingConfigs.config
         }
     }
 }
@@ -32,12 +38,13 @@ android {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:24.2.0'
-    compile 'com.android.support:design:24.2.0'
-    compile 'com.android.support:support-v4:24.2.0'
-    compile 'com.android.support:recyclerview-v7:24.2.0'
-    compile 'com.google.android.gms:play-services-maps:9.4.0'
+    compile 'com.android.support:appcompat-v7:24.2.1'
+    compile 'com.android.support:design:24.2.1'
+    compile 'com.android.support:support-v4:24.2.1'
+    compile 'com.android.support:recyclerview-v7:24.2.1'
+    compile 'com.google.android.gms:play-services-maps:9.6.1'
     compile 'com.google.code.gson:gson:2.5'
     compile 'com.squareup.picasso:picasso:2.4.0'
-    compile 'org.apache.directory.studio:org.apache.commons.io:2.4'
+    compile 'commons-io:commons-io:2.4'
+//    compile 'org.apache.directory.studio:org.apache.commons.io:2.4'
 }

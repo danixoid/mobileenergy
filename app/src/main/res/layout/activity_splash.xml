@@ -51,7 +51,7 @@
             android:textAppearance="?android:attr/textAppearance"
             android:id="@+id/info"
             android:gravity="center"
-            android:textColor="@color/common_plus_signin_btn_text_dark_default"
+            android:textColor="#FFFFFF"
             android:layout_below="@+id/progress_battery"
             android:layout_centerHorizontal="true" />
 
